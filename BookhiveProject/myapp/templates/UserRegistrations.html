@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block contents %}
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .container {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+    }
+
+    .register-card {
+        background: white;
+        padding: 40px;
+        border-radius: 18px;
+        width: 420px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        border: 1px solid #eeeeee;
+    }
+
+    .register-card h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #333;
+        font-size: 30px;
+    }
+
+    .register-card input,
+    .register-card textarea {
+        width: 100%;
+        padding: 13px 14px;
+        margin-bottom: 14px;
+        border-radius: 10px;
+        border: 1px solid #dcdcdc;
+        font-size: 15px;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    .register-card input:focus,
+    .register-card textarea:focus {
+        border-color: #667eea;
+    }
+
+    .register-card textarea {
+        resize: vertical;
+        min-height: 90px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 13px;
+        border: none;
+        border-radius: 10px;
+        background: #667eea;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 5px;
+    }
+
+    .btn:hover {
+        background: #5a67d8;
+    }
+
+    .links {
+        margin-top: 18px;
+        text-align: center;
+    }
+
+    .links a {
+        text-decoration: none;
+        color: #667eea;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    .links a:hover {
+        text-decoration: underline;
+    }
+
+    .message {
+        margin-top: 15px;
+        text-align: center;
+    }
+
+    .message p {
+        margin: 6px 0;
+        color: #d11a2a;
+    }
+</style>
+
+<div class="container">
+    <div class="register-card">
+        <h2>Create Account</h2>
+
+        <form action="{% url 'UserRegister' %}" method="post">
+            {% csrf_token %}
+
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="text" name="loginid" placeholder="Login ID" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <input type="text" name="mobile" placeholder="Mobile Number" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+            <input type="text" name="locality" placeholder="Locality">
+            <textarea name="address" placeholder="Address"></textarea>
+            <input type="text" name="city" placeholder="City">
+            <input type="text" name="state" placeholder="State">
+
+            <button type="submit" class="btn">Create Account</button>
+        </form>
+
+        <div class="links">
+            <a href="{% url 'UserLogin' %}">Already have an account? Login</a>
+        </div>
+
+        <div class="message">
+            {% if messages %}
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
