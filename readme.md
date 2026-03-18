@@ -30,7 +30,9 @@ This project was developed as part of a Scrum-based team assignment, focusing on
 Bookhive/
 │
 ├── BookhiveProject/
+|
 │   ├── BookhiveProject/
+|   |
 │   │   ├── settings.py
 │   │   ├── urls.py
 │   │   ├── asgi.py
@@ -59,25 +61,25 @@ Bookhive/
 ## Setup Instructions
 
 1.⁠ ⁠Clone the repository  
-git clone https://github.com/Savikhya/Book_Hive.git  
-cd Book_Hive  
+`git clone https://github.com/Savikhya/Book_Hive.git  
+cd Book_Hive` 
 
 2.⁠ ⁠Create virtual environment  
-python -m venv venv  
+`python -m venv venv  
 source venv/bin/activate   (Mac/Linux)  
-venv\Scripts\activate      (Windows)  
+venv\Scripts\activate      (Windows)`  
 
 3.⁠ ⁠Install dependencies  
-pip install django  
+`pip install django`  
 
 4.⁠ ⁠Run migrations  
-python manage.py migrate  
+`python manage.py migrate`  
 
 5.⁠ ⁠Start server  
-python manage.py runserver  
+`python manage.py runserver`  
 
 6.⁠ ⁠Open in browser  
-http://127.0.0.1:8000/home/
+`http://127.0.0.1:8000/home/`
 
 ---
 
@@ -133,27 +135,6 @@ http://127.0.0.1:8000/home/
 The following files and folders should NOT be pushed to the repository:
 •⁠  ⁠venv/  
 •⁠  ⁠db.sqlite3  
-
----
-
-## .gitignore Configuration
-
-Make sure to include the following in your ⁠ .gitignore ⁠ file:
-
-venv/  
-_pycache_/  
-*.pyc  
-db.sqlite3  
-.env  
-
----
-
-## Learning Outcomes
-•⁠  ⁠Hands-on experience with Scrum methodology
-•⁠  ⁠Task management using JIRA
-•⁠  ⁠Version control using Git and GitHub
-•⁠  ⁠Working with branches and pull requests
-•⁠  ⁠Understanding Django project structure
 
 ---
 
