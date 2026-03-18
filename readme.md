@@ -71,6 +71,7 @@ Bookhive/
 1.⁠ ⁠Clone the repository  
 
 `git clone https://github.com/Savikhya/Book_Hive.git` 
+
 `cd Book_Hive` 
 
 2.⁠ ⁠Create virtual environment 
