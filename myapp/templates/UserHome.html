@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block contents %}
+
+<style>
+    body {
+        background: #f5f6fa;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .navbar {
+        background: #667eea;
+        color: white;
+        padding: 15px 30px;
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .container {
+        padding: 30px;
+    }
+
+    .book-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .book-card {
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: 0.3s;
+    }
+
+    .book-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .book-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .book-author {
+        color: gray;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .logout {
+        float: right;
+        font-size: 14px;
+        color: white;
+        text-decoration: none;
+    }
+
+</style>
+
+<div class="navbar">
+    Bookhive 📚
+    <a href="{% url 'Logout' %}" class="logout">Logout</a>
+</div>
+
+<div class="container">
+    <h2>Welcome {{ request.session.user_loginid }}</h2>
+
+    <div class="book-grid">
+        <div class="book-card">
+            <div class="book-title">The Alchemist</div>
+            <div class="book-author">Paulo Coelho</div>
+        </div>
+
+        <div class="book-card">
+            <div class="book-title">Atomic Habits</div>
+            <div class="book-author">James Clear</div>
+        </div>
+
+        <div class="book-card">
+            <div class="book-title">Rich Dad Poor Dad</div>
+            <div class="book-author">Robert Kiyosaki</div>
+        </div>
+
+        <div class="book-card">
+            <div class="book-title">Ikigai</div>
+            <div class="book-author">Hector Garcia</div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
