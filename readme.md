@@ -1,114 +1,104 @@
-# BookHive Project
+# BookHive
 
-## Overview
-BookHive is a web-based application built using Django. The goal of this project is to provide a platform where users can explore, manage, and interact with book-related information.
-
-This project was developed as part of a Scrum-based team assignment, focusing on collaboration, version control using Git, and task management using JIRA.
+BookHive is a Django-based web application that provides basic functionality for user and admin login, along with viewing book-related information.
 
 ---
 
-## Features
-•⁠  ⁠User Registration and Login
+## Features (Current)
 
-•⁠  ⁠Book browsing interface
-
-•⁠  ⁠Forgot password functionality
-
-•⁠  ⁠Admin login support
-
-•⁠  ⁠Structured Django project setup
-
-•⁠  ⁠Responsive UI using HTML templates
-
----
-
-## Tech Stack
-•⁠  ⁠Backend: Django (Python)
-
-•⁠  ⁠Frontend: HTML, CSS
-
-•⁠  ⁠Database: SQLite
-
-•⁠  ⁠Version Control: Git & GitHub
-
-•⁠  ⁠Project Management: JIRA
+- User Login page
+- User Registration page
+- Admin Login page
+- Forgot Password page
+- Book Detail page
+- Admin panel customization
 
 ---
 
 ## Project Structure
-```
-Bookhive/
+
+BookHive/
 │
 ├── BookhiveProject/
-│   ├── BookhiveProject/
-│   │   ├── settings.py
-│   │   ├── urls.py
-│   │   ├── asgi.py
-│   │   └── wsgi.py
-│   │
-│   ├── myapp/
-│   │   ├── apps.py
-│   │   ├── models.py
-│   │   ├── views.py
-│   │   ├── admin.py
-│   │   ├── templates/
-│   │   │   ├── base.html
-│   │   │   ├── UserRegistrations.html
-│   │   │   ├── UserLogin.html
-│   │   │   ├── UserHome.html
-│   │   │   ├── forgotpassword.html
-│   │   │   └── adminlogin.html
-│   │   └── migrations/
-│   │
-│   └── manage.py
+│   ├── settings.py
+│   ├── urls.py
 │
-└── README.md
-```
----
-
-## Setup Instructions
-
-1.⁠ ⁠Clone the repository  
-
-`git clone https://github.com/Savikhya/Book_Hive.git` 
-
-`cd Book_Hive` 
-
-2.⁠ ⁠Create virtual environment 
-
-`python -m venv venv`  
-
-`source venv/bin/activate`   #(Mac/Linux)
-
-`venv\Scripts\activate`      #(Windows)  
-
-3.⁠ ⁠Install dependencies  
-`pip install django`  
-
-4.⁠ ⁠Run migrations  
-`python manage.py migrate`  
-
-5.⁠ ⁠Start server  
-`python manage.py runserver`  
-
-6.⁠ ⁠Open in browser  
-`http://127.0.0.1:8000/home/`
+├── myapp/
+│   ├── admin.py
+│   ├── views.py
+│   ├── urls.py
+│   ├── templates/
+│       ├── UserLogin.html
+│       ├── UserRegistrations.html
+│       ├── UserHome.html
+│       ├── AdminLogin.html
+│       ├── ForgotPassword.html
+│       ├── book_detail.html
+│       ├── base.html
+│       ├── admin/
+│           ├── base_site.html
+│
+└── manage.py
 
 ---
 
-## Important Instructions
+## Updated Files in This Version
 
-The following files and folders should NOT be pushed to the repository:
-
-•⁠  ⁠venv/  
-•⁠  ⁠db.sqlite3  
+- myapp/urls.py
+- myapp/views.py
+- myapp/templates/UserLogin.html
+- myapp/templates/ForgotPassword.html
+- myapp/templates/AdminLogin.html
+- myapp/templates/book_detail.html
+- myapp/templates/admin/base_site.html
+- myapp/admin.py
+- BookhiveProject/settings.py
 
 ---
+
+## How to Run
+
+1. Open terminal and go to project folder
+
+2. Create virtual environment:
+   python -m venv venv
+
+3. Activate it:
+   Mac/Linux: source venv/bin/activate  
+   Windows: venv\Scripts\activate
+
+4. Install Django:
+   pip install django
+
+5. Apply migrations:
+   python manage.py migrate
+
+6. Run server:
+   python manage.py runserver
+
+7. Open in browser:
+   http://127.0.0.1:8000/
+
+---
+
 ## Notes
 
-This README covers Sprint 1 only. It will be updated at each new sprint to reflect newly added features, any changes to setup, and updated project structure.
+- Make sure all migrations are applied before running
+- File names are case-sensitive (e.g., ForgotPassword.html)
+- Admin access requires creating a superuser
 
--------
+To create superuser:
+python manage.py createsuperuser
 
-## License
-This project is for academic purposes only.
+---
+
+## Team
+
+**Team Name:** BookHive Team
+
+- Hemanth Borra  
+- Savikhya Kadiyala  
+- Harsha Reddy Erragunta  
+- Hemesh Phani Sai Bavirisetti  
+
+---
