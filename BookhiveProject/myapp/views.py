@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -40,7 +41,7 @@ def UserRegister(request):
     return render(request, 'UserRegistrations.html')
 
 
-# ---------------- LOGIN ----------------
+# ---------------- USER LOGIN ----------------
 def UserLogin(request):
     if request.method == 'POST':
         loginid = request.POST.get('loginid')
@@ -103,20 +104,27 @@ def book_detail(request, id):
 # ---------------- LOGOUT ----------------
 def Logout(request):
     request.session.flush()
+    logout(request)
     return redirect('UserLogin')
 
 
 # ---------------- ADMIN LOGIN ----------------
 def AdminLogin(request):
+    if request.user.is_authenticated and request.user.is_staff:
+        return redirect('/admin/')
+
     if request.method == 'POST':
-        loginid = request.POST.get('loginid')
+        username = request.POST.get('loginid')
         password = request.POST.get('pswd')
 
-        if loginid == 'admin' and password == 'admin':
-            messages.success(request, 'Admin login successful')
-            return render(request, 'AdminLogin.html')
+        admin_user = authenticate(request, username=username, password=password)
 
-        messages.error(request, 'Invalid admin credentials')
+        if admin_user and admin_user.is_staff:
+            login(request, admin_user)
+            messages.success(request, 'Admin login successful')
+            return redirect('/admin/')
+
+        messages.error(request, 'Invalid admin username or password')
 
     return render(request, 'AdminLogin.html')
 

@@ -10,10 +10,11 @@
     }
 
     .container {
-        height: 100vh;
+        min-height: 100vh;
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 20px;
     }
 
     .login-card {
@@ -39,6 +40,7 @@
         border: 1px solid #ccc;
         font-size: 15px;
         outline: none;
+        box-sizing: border-box;
     }
 
     .login-card input:focus {
@@ -78,6 +80,17 @@
         text-decoration: underline;
     }
 
+    .admin-link {
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eeeeee;
+    }
+
+    .admin-link a {
+        color: #111827;
+        font-weight: 600;
+    }
+
     .message {
         margin-top: 15px;
     }
@@ -95,16 +108,18 @@
 
         <form action="{% url 'UserLogin' %}" method="post">
             {% csrf_token %}
-
             <input type="text" name="loginid" placeholder="Login ID" required>
             <input type="password" name="pswd" placeholder="Password" required>
-
             <button type="submit" class="btn">Login</button>
         </form>
 
         <div class="links">
             <a href="{% url 'UserRegister' %}">Create Account</a>
             <a href="{% url 'ForgotPassword' %}">Forgot Password?</a>
+        </div>
+
+        <div class="admin-link">
+            <a href="{% url 'AdminLogin' %}">Admin Login</a>
         </div>
 
         <div class="message">
