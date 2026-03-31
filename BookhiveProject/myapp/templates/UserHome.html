@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookhive Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            margin: 30px auto;
+        }
+
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .search-box form {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .search-box input[type="text"] {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .search-box button,
+        .clear-btn {
+            padding: 12px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-box button:hover,
+        .clear-btn:hover {
+            background: #2980b9;
+        }
+
+        .result-text {
+            margin: 10px 0 25px;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .book-card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+
+        .book-card a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .book-card a:hover {
+            text-decoration: underline;
+        }
+
+        .empty-message {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            margin-top: 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <h2>Bookhive</h2>
+        <div>
+            <a href="{% url 'UserHome' %}">Home</a>
+            <a href="{% url 'Logout' %}">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="search-box">
+            <form method="GET" action="{% url 'search_books' %}">
+                <input type="text" name="q" placeholder="Search by title, author, genre, or description..." value="{{ query|default:'' }}">
+                <button type="submit">Search</button>
+                {% if query %}
+                    <a href="{% url 'UserHome' %}" class="clear-btn">Clear</a>
+                {% endif %}
+            </form>
+        </div>
+
+        {% if query %}
+            <div class="result-text">
+                Showing results for: <strong>{{ query }}</strong>
+            </div>
+        {% endif %}
+
+        <div class="books-grid">
+            {% for book in books %}
+                <div class="book-card">
+                    <h3>
+                        <a href="{% url 'book_detail' book.id %}">
+                            {{ book.title }}
+                        </a>
+                    </h3>
+                    <p><strong>Author:</strong> {{ book.author }}</p>
+                    <p><strong>Genre:</strong> {{ book.genre.name }}</p>
+                    <p>
+                        <a href="{% url 'book_detail' book.id %}">View Details</a>
+                    </p>
+                </div>
+            {% empty %}
+                <div class="empty-message">
+                    No books found for your search.
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+</body>
+</html>
