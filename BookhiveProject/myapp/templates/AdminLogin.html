@@ -3,78 +3,145 @@
 
 <style>
     body {
-        background-color: #f8f9fa;
+        background: linear-gradient(135deg, #1f2937, #111827);
         font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
     }
 
     .admin-container {
-        max-width: 400px;
-        margin: 70px auto;
-        background: rgba(0, 0, 0, 0.75);
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .admin-card {
+        width: 100%;
+        max-width: 420px;
+        background: white;
+        padding: 35px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     }
 
     .admin-title {
         text-align: center;
-        color: #ffa500;
+        color: #111827;
         font-size: 30px;
         font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .admin-subtitle {
+        text-align: center;
+        color: #6b7280;
+        font-size: 14px;
         margin-bottom: 25px;
     }
 
+    .form-group {
+        margin-bottom: 16px;
+    }
+
     .form-group label {
-        color: white;
+        display: block;
+        color: #111827;
         font-weight: bold;
         margin-bottom: 6px;
     }
 
     .form-control {
-        border-radius: 6px;
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid #d1d5db;
+        padding: 12px;
+        box-sizing: border-box;
+        font-size: 15px;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #2563eb;
     }
 
     .btn-admin {
         width: 100%;
-        background-color: #007bff;
+        background-color: #2563eb;
         border: none;
-        padding: 10px;
+        padding: 12px;
         color: white;
-        font-size: 18px;
-        border-radius: 6px;
-        margin-top: 10px;
+        font-size: 16px;
+        border-radius: 10px;
+        margin-top: 6px;
+        cursor: pointer;
     }
 
     .btn-admin:hover {
-        background-color: #0056b3;
+        background-color: #1d4ed8;
+    }
+
+    .bottom-link {
+        text-align: center;
+        margin-top: 18px;
+    }
+
+    .bottom-link a {
+        text-decoration: none;
+        color: #2563eb;
+        font-weight: 500;
+    }
+
+    .bottom-link a:hover {
+        text-decoration: underline;
+    }
+
+    .note-box {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        color: #374151;
+        border-radius: 10px;
+        padding: 12px;
+        margin-bottom: 18px;
+        font-size: 14px;
     }
 </style>
 
 <div class="admin-container">
-    <h2 class="admin-title">Admin Login</h2>
+    <div class="admin-card">
+        <h2 class="admin-title">Admin Login</h2>
+        <p class="admin-subtitle">Use your Django admin username and password</p>
 
-    <form action="{% url 'AdminLogin' %}" method="post">
-        {% csrf_token %}
-
-        <div class="form-group mb-3">
-            <label>Login ID</label>
-            <input type="text" class="form-control" name="loginid" required>
+        <div class="note-box">
+            After login, you will be redirected to the Django admin panel.
         </div>
 
-        <div class="form-group mb-3">
-            <label>Password</label>
-            <input type="password" class="form-control" name="pswd" required>
+        <form action="{% url 'AdminLogin' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" class="form-control" name="loginid" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" name="pswd" required>
+            </div>
+
+            <button type="submit" class="btn-admin">Login as Admin</button>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'success' %}success{% else %}danger{% endif %} text-center mt-3">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        </form>
+
+        <div class="bottom-link">
+            <a href="{% url 'UserLogin' %}">Back to User Login</a>
         </div>
-
-        <button type="submit" class="btn-admin">Login</button>
-        <button type="reset" class="btn-admin">Reset</button>
-
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-success text-center mt-3">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    </form>
+    </div>
 </div>
 
 {% endblock %}
