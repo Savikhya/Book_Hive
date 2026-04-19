@@ -11,33 +11,86 @@
             margin: 0;
             padding: 0;
         }
+
         .navbar {
             background-color: #2c3e50;
             color: white;
             padding: 15px 30px;
         }
+
         .navbar a {
             color: white;
             text-decoration: none;
             font-weight: bold;
         }
+
         .container {
             width: 80%;
-            max-width: 800px;
+            max-width: 900px;
             margin: 30px auto;
         }
+
         .card {
             background: white;
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+            flex-wrap: wrap;
         }
+
+        .cover-section {
+            flex: 1;
+            min-width: 220px;
+            text-align: center;
+        }
+
+        .details-section {
+            flex: 2;
+            min-width: 280px;
+        }
+
+        .book-cover {
+            width: 220px;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .no-cover {
+            width: 220px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #f0f0f0;
+            color: #666;
+            margin: 0 auto;
+        }
+
         h1 {
             margin-top: 0;
             color: #2c3e50;
         }
+
         p {
             line-height: 1.6;
+        }
+
+        .pdf-links a {
+            margin-right: 15px;
+            color: #3498db;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .pdf-links a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -48,10 +101,32 @@
 
     <div class="container">
         <div class="card">
-            <h1>{{ book.title }}</h1>
-            <p><strong>Author:</strong> {{ book.author }}</p>
-            <p><strong>Genre:</strong> {{ book.genre.name }}</p>
-            <p><strong>Description:</strong> {{ book.description }}</p>
+
+            <div class="cover-section">
+                {% if book.cover_image %}
+                    <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="book-cover">
+                {% else %}
+                    <div class="no-cover">No Cover Image</div>
+                {% endif %}
+            </div>
+
+            <div class="details-section">
+                <h1>{{ book.title }}</h1>
+                <p><strong>Author:</strong> {{ book.author }}</p>
+                <p><strong>Genre:</strong> {{ book.genre.name }}</p>
+                <p><strong>Description:</strong> {{ book.description }}</p>
+
+                {% if book.book_pdf %}
+                    <p><strong>Book PDF:</strong> Available</p>
+                    <div class="pdf-links">
+                        <a href="{{ book.book_pdf.url }}" target="_blank">View PDF</a>
+                        <a href="{% url 'download_book_pdf' book.id %}">Download PDF</a>
+                    </div>
+                {% else %}
+                    <p><strong>Book PDF:</strong> Not uploaded</p>
+                {% endif %}
+            </div>
+
         </div>
     </div>
 </body>
