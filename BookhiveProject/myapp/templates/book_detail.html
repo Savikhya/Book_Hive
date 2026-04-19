@@ -39,6 +39,15 @@
         p {
             line-height: 1.6;
         }
+        .pdf-links a {
+            margin-right: 15px;
+            color: #3498db;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .pdf-links a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -52,6 +61,16 @@
             <p><strong>Author:</strong> {{ book.author }}</p>
             <p><strong>Genre:</strong> {{ book.genre.name }}</p>
             <p><strong>Description:</strong> {{ book.description }}</p>
+
+            {% if book.book_pdf %}
+                <p><strong>Book PDF:</strong> Available</p>
+                <div class="pdf-links">
+                    <a href="{{ book.book_pdf.url }}" target="_blank">View PDF</a>
+                    <a href="{% url 'download_book_pdf' book.id %}">Download PDF</a>
+                </div>
+            {% else %}
+                <p><strong>Book PDF:</strong> Not uploaded</p>
+            {% endif %}
         </div>
     </div>
 </body>
