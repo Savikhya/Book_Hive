@@ -28,6 +28,8 @@ class Book(models.Model):
     author = models.CharField(max_length=200)
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
     description = models.TextField()
+    book_pdf = models.FileField(upload_to='book_pdfs/', blank=True, null=True)
+    cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
 
     def __str__(self):
         return self.title
