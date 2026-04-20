@@ -16,7 +16,7 @@ BookHive is a Django-based web application that provides basic functionality for
 ---
 
 ## Project Structure
-
+```
 BookHive/
 │
 ├── BookhiveProject/
@@ -39,7 +39,7 @@ BookHive/
 │           ├── base_site.html
 │
 └── manage.py
-
+```
 ---
 
 ## Updated Files in This Version
