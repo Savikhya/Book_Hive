@@ -2,20 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bookhive Home</title>
+    <title>BookHive Home</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
             margin: 0;
-            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f1ed;
         }
 
         .navbar {
-            background-color: #2c3e50;
+            background: #2c3e50;
             color: white;
-            padding: 15px 30px;
+            padding: 18px 45px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -23,6 +21,7 @@
 
         .navbar h2 {
             margin: 0;
+            letter-spacing: 1px;
         }
 
         .navbar a {
@@ -32,153 +31,517 @@
             font-weight: bold;
         }
 
+        .hero {
+            background: linear-gradient(135deg, #2c3e50, #8e735b);
+            color: white;
+            padding: 45px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 42px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #f2f2f2;
+        }
+
         .container {
-            width: 90%;
+            width: 92%;
             margin: 30px auto;
         }
 
         .search-box {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            padding: 22px;
+            border-radius: 16px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
         }
 
         .search-box form {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
-        .search-box input[type="text"] {
+        .search-box input,
+        .search-box select {
             flex: 1;
-            min-width: 250px;
-            padding: 12px;
+            min-width: 210px;
+            padding: 13px;
             border: 1px solid #ccc;
-            border-radius: 8px;
+            border-radius: 10px;
         }
 
         .search-box button,
         .clear-btn {
-            padding: 12px 20px;
-            background: #3498db;
-            color: white;
+            padding: 13px 22px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
+            background: #2c3e50;
+            color: white;
+            font-weight: bold;
             cursor: pointer;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .search-box button:hover,
         .clear-btn:hover {
-            background: #2980b9;
+            background: #1f2d3a;
         }
 
-        .result-text {
-            margin: 10px 0 25px;
+        .section-title {
             color: #2c3e50;
-            font-size: 16px;
+            margin-bottom: 20px;
         }
 
         .books-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
         }
 
         .book-card {
             background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 18px;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            text-align: center;
             transition: 0.3s;
         }
 
         .book-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px);
+        }
+
+        .book-cover {
+            width: 175px;
+            height: 245px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #ddd;
+        }
+
+        .no-cover {
+            width: 175px;
+            height: 245px;
+            margin: auto;
+            border-radius: 12px;
+            background: #e8e2dc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #777;
         }
 
         .book-card h3 {
-            margin-top: 0;
             color: #2c3e50;
         }
 
         .book-card a {
-            text-decoration: none;
-            color: #3498db;
+            color: #2c3e50;
             font-weight: bold;
+            text-decoration: none;
         }
 
         .book-card a:hover {
             text-decoration: underline;
         }
 
+        .book-actions a {
+            display: inline-block;
+            margin: 5px;
+            padding: 9px 12px;
+            background: #8e735b;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .book-actions a:hover {
+            background: #6d5541;
+        }
+
         .empty-message {
-            text-align: center;
-            font-size: 18px;
-            color: #666;
-            margin-top: 30px;
             background: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 14px;
+            text-align: center;
+            color: #777;
+            grid-column: 1 / -1;
+        }
+
+        .pagination {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .pagination a,
+        .pagination span {
+            padding: 10px 14px;
+            background: white;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #2c3e50;
+            margin: 4px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+
+        .pagination .current {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .chatbot-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 5px 14px rgba(0,0,0,0.25);
+            z-index: 1000;
+        }
+
+        .chatbot-toggle:hover {
+            background: #1f2d3a;
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 360px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+            display: none;
+            overflow: hidden;
+            z-index: 1000;
+        }
+
+        .chatbot-header {
+            background: #2c3e50;
+            color: white;
+            padding: 14px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-controls button {
+            margin-left: 6px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .chatbot-controls button:hover {
+            color: #f1c40f;
+        }
+
+        .chatbot-body {
+            padding: 15px;
+            max-height: 360px;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+
+        .chatbot-input-area {
+            display: flex;
+            padding: 12px;
+            gap: 8px;
+            border-top: 1px solid #ddd;
+        }
+
+        .chatbot-input-area input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .chatbot-input-area button {
+            background: #8e735b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 13px;
+            cursor: pointer;
+        }
+
+        .chatbot-input-area button:hover {
+            background: #6d5541;
+        }
+
+        .chat-message {
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .chat-user {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .chat-bot {
+            color: #333;
+        }
+
+        .chat-book-list {
+            padding-left: 18px;
+        }
+
+        .chat-book-list li {
+            margin-bottom: 10px;
+        }
+
+        .match-note {
+            font-size: 12px;
+            color: #777;
         }
     </style>
 </head>
 <body>
 
-    <div class="navbar">
-        <h2>Bookhive</h2>
-        <div>
-            <a href="{% url 'UserHome' %}">Home</a>
-            <a href="{% url 'Logout' %}">Logout</a>
-        </div>
+<div class="navbar">
+    <h2>BookHive</h2>
+    <div>
+        <a href="{% url 'UserHome' %}">Home</a>
+        <a href="{% url 'Logout' %}">Logout</a>
+    </div>
+</div>
+
+<div class="hero">
+    <h1>Explore Your Digital Library</h1>
+    <p>Search, view, download, and discover recommended books.</p>
+</div>
+
+<div class="container">
+
+    <div class="search-box">
+        <form method="GET" action="{% url 'search_books' %}">
+            <input type="text" name="q" placeholder="Search book by title..." value="{{ query|default:'' }}">
+
+            <select name="genre">
+                <option value="">All Genres</option>
+                {% for genre in genres %}
+                    <option value="{{ genre.id }}" {% if selected_genre == genre.id|stringformat:"s" %}selected{% endif %}>
+                        {{ genre.name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <select name="sort">
+                <option value="">Sort By</option>
+                <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Title</option>
+                <option value="author" {% if sort_by == 'author' %}selected{% endif %}>Author</option>
+                <option value="latest" {% if sort_by == 'latest' %}selected{% endif %}>Latest Added</option>
+            </select>
+
+            <button type="submit">Search</button>
+
+            {% if query or selected_genre or sort_by %}
+                <a href="{% url 'UserHome' %}" class="clear-btn">Clear</a>
+            {% endif %}
+        </form>
     </div>
 
-    <div class="container">
+    <h2 class="section-title">All Books</h2>
 
-        <div class="search-box">
-            <form method="GET" action="{% url 'search_books' %}">
-                <input type="text" name="q" placeholder="Search by title, author, genre, or description..." value="{{ query|default:'' }}">
-                <button type="submit">Search</button>
-                {% if query %}
-                    <a href="{% url 'UserHome' %}" class="clear-btn">Clear</a>
+    <div class="books-grid">
+        {% for book in page_obj %}
+            <div class="book-card">
+                {% if book.cover_image %}
+                    <img src="{{ book.cover_image.url }}" class="book-cover" alt="{{ book.title }}">
+                {% else %}
+                    <div class="no-cover">No Cover Image</div>
                 {% endif %}
-            </form>
-        </div>
 
-        {% if query %}
-            <div class="result-text">
-                Showing results for: <strong>{{ query }}</strong>
+                <h3>
+                    <a href="{% url 'book_detail' book.id %}">{{ book.title }}</a>
+                </h3>
+
+                <p><strong>Author:</strong> {{ book.author }}</p>
+
+                <p><strong>Genres:</strong>
+                    {% for genre in book.genres.all %}
+                        {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+
+                <p><a href="{% url 'book_detail' book.id %}">View Details</a></p>
+
+                {% if book.book_pdf %}
+                    <div class="book-actions">
+                        <a href="{{ book.book_pdf.url }}" target="_blank">View Book</a>
+                        <a href="{% url 'download_book_pdf' book.id %}">Download Book</a>
+                    </div>
+                {% else %}
+                    <p>No Book uploaded</p>
+                {% endif %}
             </div>
+        {% empty %}
+            <div class="empty-message">No book found.</div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?q={{ query }}&genre={{ selected_genre }}&sort={{ sort_by }}&page=1">First</a>
+            <a href="?q={{ query }}&genre={{ selected_genre }}&sort={{ sort_by }}&page={{ page_obj.previous_page_number }}">Previous</a>
         {% endif %}
 
-        <div class="books-grid">
-            {% for book in books %}
-                <div class="book-card">
-                    <h3>
-                        <a href="{% url 'book_detail' book.id %}">
-                            {{ book.title }}
-                        </a>
-                    </h3>
-                    <p><strong>Author:</strong> {{ book.author }}</p>
-                    <p><strong>Genre:</strong> {{ book.genre.name }}</p>
-                    <p>
-                        <a href="{% url 'book_detail' book.id %}">View Details</a>
-                    </p>
-                </div>
-            {% empty %}
-                <div class="empty-message">
-                    No books found for your search.
-                </div>
-            {% endfor %}
-        </div>
+        <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
 
+        {% if page_obj.has_next %}
+            <a href="?q={{ query }}&genre={{ selected_genre }}&sort={{ sort_by }}&page={{ page_obj.next_page_number }}">Next</a>
+            <a href="?q={{ query }}&genre={{ selected_genre }}&sort={{ sort_by }}&page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
     </div>
+</div>
+
+<button class="chatbot-toggle" onclick="openChatbot()">Chatbot</button>
+
+<div class="chatbot-container" id="chatbotContainer">
+    <div class="chatbot-header">
+        <span>Book Assistant</span>
+        <div class="chatbot-controls">
+            <button type="button" onclick="minimizeChat()">_</button>
+            <button type="button" onclick="closeChat()">✕</button>
+        </div>
+    </div>
+
+    <div class="chatbot-body" id="chatbotBody">
+        <div class="chat-message">
+            <div class="chat-bot">What are you interested in reading?</div>
+        </div>
+    </div>
+
+    <div class="chatbot-input-area">
+        <input type="text" id="chatMessage" placeholder="Enter your reading interest">
+        <button type="button" onclick="getBookSuggestions()">Send</button>
+    </div>
+</div>
+
+<script>
+    let chatMinimized = false;
+
+    function openChatbot() {
+        const box = document.getElementById('chatbotContainer');
+        const body = document.getElementById('chatbotBody');
+        const inputArea = document.querySelector('.chatbot-input-area');
+
+        box.style.display = 'block';
+        body.style.display = 'block';
+        inputArea.style.display = 'flex';
+        chatMinimized = false;
+    }
+
+    function minimizeChat() {
+        const body = document.getElementById('chatbotBody');
+        const inputArea = document.querySelector('.chatbot-input-area');
+
+        if (!chatMinimized) {
+            body.style.display = 'none';
+            inputArea.style.display = 'none';
+            chatMinimized = true;
+        } else {
+            body.style.display = 'block';
+            inputArea.style.display = 'flex';
+            chatMinimized = false;
+        }
+    }
+
+    function closeChat() {
+        const box = document.getElementById('chatbotContainer');
+        const body = document.getElementById('chatbotBody');
+        const inputArea = document.querySelector('.chatbot-input-area');
+
+        box.style.display = 'none';
+        inputArea.style.display = 'flex';
+
+        body.innerHTML = `
+            <div class="chat-message">
+                <div class="chat-bot">What are you interested in reading?</div>
+            </div>
+        `;
+
+        chatMinimized = false;
+    }
+
+    function getBookSuggestions() {
+        const input = document.getElementById('chatMessage');
+        const message = input.value.trim();
+        const body = document.getElementById('chatbotBody');
+
+        if (!message) return;
+
+        body.innerHTML += `
+            <div class="chat-message">
+                <div class="chat-user">You: ${message}</div>
+            </div>
+        `;
+
+        fetch("{% url 'chatbot_suggestions' %}?message=" + encodeURIComponent(message))
+            .then(response => response.json())
+            .then(data => {
+                let html = `<div class="chat-message"><div class="chat-bot"><b>Bot:</b> ${data.reply}</div>`;
+
+                if (data.redirect_url) {
+                    html += `</div>`;
+                    body.innerHTML += html;
+                    body.scrollTop = body.scrollHeight;
+
+                    setTimeout(() => {
+                        window.location.href = data.redirect_url;
+                    }, 800);
+                    return;
+                }
+
+                if (data.books && data.books.length > 0) {
+                    html += `<ul class="chat-book-list">`;
+                    data.books.forEach(book => {
+                        html += `
+                            <li>
+                                <a href="/book/${book.id}/">${book.title}</a> by ${book.author}
+                                <br><small>${book.genres}</small>
+                                <br><small>${book.description}</small>
+                                <br><span class="match-note">Matched on: ${book.matched_on}</span>
+                            </li>
+                        `;
+                    });
+                    html += `</ul>`;
+                }
+
+                html += `</div>`;
+                body.innerHTML += html;
+                body.scrollTop = body.scrollHeight;
+            })
+            .catch(() => {
+                body.innerHTML += `
+                    <div class="chat-message">
+                        <div class="chat-bot"><b>Bot:</b> Chatbot request failed.</div>
+                    </div>
+                `;
+                body.scrollTop = body.scrollHeight;
+            });
+
+        input.value = '';
+    }
+</script>
 
 </body>
 </html>
