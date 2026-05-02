@@ -25,8 +25,8 @@
         }
 
         .container {
-            width: 80%;
-            max-width: 900px;
+            width: 85%;
+            max-width: 1100px;
             margin: 30px auto;
         }
 
@@ -39,6 +39,7 @@
             gap: 25px;
             align-items: flex-start;
             flex-wrap: wrap;
+            margin-bottom: 30px;
         }
 
         .cover-section {
@@ -73,7 +74,7 @@
             margin: 0 auto;
         }
 
-        h1 {
+        h1, h2 {
             margin-top: 0;
             color: #2c3e50;
         }
@@ -82,15 +83,80 @@
             line-height: 1.6;
         }
 
-        .pdf-links a {
+        .book-links a {
             margin-right: 15px;
             color: #3498db;
             font-weight: bold;
             text-decoration: none;
         }
 
-        .pdf-links a:hover {
+        .book-links a:hover {
             text-decoration: underline;
+        }
+
+        .section-title {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .book-card h3 {
+            margin-top: 12px;
+            color: #2c3e50;
+        }
+
+        .book-card a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+
+        .book-card a:hover {
+            text-decoration: underline;
+        }
+
+        .small-cover {
+            width: 150px;
+            height: 210px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+        }
+
+        .small-no-cover {
+            width: 150px;
+            height: 210px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px auto;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f0f0f0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .empty-message {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            color: #666;
         }
     </style>
 </head>
@@ -101,7 +167,6 @@
 
     <div class="container">
         <div class="card">
-
             <div class="cover-section">
                 {% if book.cover_image %}
                     <img src="{{ book.cover_image.url }}" alt="{{ book.title }}" class="book-cover">
@@ -113,21 +178,61 @@
             <div class="details-section">
                 <h1>{{ book.title }}</h1>
                 <p><strong>Author:</strong> {{ book.author }}</p>
-                <p><strong>Genre:</strong> {{ book.genre.name }}</p>
+                <p><strong>Genres:</strong>
+                    {% for genre in book.genres.all %}
+                        {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
                 <p><strong>Description:</strong> {{ book.description }}</p>
 
                 {% if book.book_pdf %}
-                    <p><strong>Book PDF:</strong> Available</p>
-                    <div class="pdf-links">
-                        <a href="{{ book.book_pdf.url }}" target="_blank">View PDF</a>
-                        <a href="{% url 'download_book_pdf' book.id %}">Download PDF</a>
+                    <p><strong>Book File:</strong> Available</p>
+                    <div class="book-links">
+                        <a href="{{ book.book_pdf.url }}" target="_blank">View Book</a>
+                        <a href="{% url 'download_book_pdf' book.id %}">Download Book</a>
                     </div>
                 {% else %}
-                    <p><strong>Book PDF:</strong> Not uploaded</p>
+                    <p><strong>Book File:</strong> Not uploaded</p>
                 {% endif %}
             </div>
-
         </div>
+
+        <h2 class="section-title">Recommended Books</h2>
+
+        {% if recommended_books %}
+            <div class="books-grid">
+                {% for rec_book in recommended_books %}
+                    <div class="book-card">
+                        {% if rec_book.cover_image %}
+                            <img src="{{ rec_book.cover_image.url }}" alt="{{ rec_book.title }}" class="small-cover">
+                        {% else %}
+                            <div class="small-no-cover">No Cover Image</div>
+                        {% endif %}
+
+                        <h3>
+                            <a href="{% url 'book_detail' rec_book.id %}">
+                                {{ rec_book.title }}
+                            </a>
+                        </h3>
+
+                        <p><strong>Author:</strong> {{ rec_book.author }}</p>
+                        <p><strong>Genres:</strong>
+                            {% for genre in rec_book.genres.all %}
+                                {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
+
+                        <p>
+                            <a href="{% url 'book_detail' rec_book.id %}">View Details</a>
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-message">
+                No recommendations available for this book yet.
+            </div>
+        {% endif %}
     </div>
 </body>
 </html>
