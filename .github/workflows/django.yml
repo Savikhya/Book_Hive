@@ -6,8 +6,11 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: BookhiveProject
 
     steps:
     - name: Checkout code
@@ -21,8 +24,8 @@ jobs:
     - name: Install dependencies
       run: |
         pip install --upgrade pip
-        pip install -r BookhiveProject/requirements.txt
+        pip install -r requirements.txt
 
     - name: Run tests
       run: |
-        python BookhiveProject/manage.py test
+        python manage.py test
