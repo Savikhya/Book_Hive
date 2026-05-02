@@ -1,104 +1,272 @@
-# BookHive
+# BookHive – Digital Library Management System
 
-BookHive is a Django-based web application that provides basic functionality for user and admin login, along with viewing book-related information.
+BookHive is a Django-based digital library web application that allows users to register, log in, search books, view book details, download books, and receive AI-powered book suggestions. The system also includes an admin dashboard where administrators can add, edit, and manage books, genres, PDFs, and cover images.
 
 ---
 
-## Features (Current)
+## Project Overview
 
-- User Login page
-- User Registration page
-- Admin Login page
-- Forgot Password page
-- Book Detail page
-- Admin panel customization
+BookHive is designed to make online book access simple and organized. Users can browse books, search by title, filter by genre, view book details, and download available book files. Admin users can manage the complete book collection through a customized Django admin panel.
+
+The project also integrates a GenAI-powered chatbot using the OpenAI API to help users find books based on their reading interests.
+
+---
+
+## Main Features
+
+### User Features
+- User registration
+- User login and logout
+- Forgot password functionality
+- Browse all available books
+- Search books by title
+- Filter books by genre
+- Sort books by title, author, or latest added
+- View book details
+- View book file
+- Download book file
+- AI-powered book suggestion chatbot
+
+### Admin Features
+- Admin login
+- Add new books
+- Edit existing books
+- Delete books
+- Upload book PDFs
+- Upload book cover images
+- Add and manage genres
+- Assign multiple genres to one book
+- Customized Django admin interface
+
+### GenAI Chatbot Features
+- Suggests books based on user interests
+- Uses OpenAI API for intelligent responses
+- Matches user input with book title, author, genre, and description
+- Can answer questions like:
+  - “What genres do you have?”
+  - “What books are available?”
+  - “Suggest history books”
+- Can open books using commands like:
+  - `open 1`
+  - `open Dracula`
+  - `show Hamlet`
+- Includes minimize and close options in the chatbot UI
+
+---
+
+## Technologies Used
+
+| Technology | Purpose |
+|----------|---------|
+| Python | Backend programming language |
+| Django | Web framework |
+| SQLite | Database |
+| HTML | Web page structure |
+| CSS | Styling and layout |
+| JavaScript | Chatbot UI interaction |
+| OpenAI API | GenAI chatbot responses |
+| Docker | Containerization |
+| DockerHub | Image hosting |
+| GitHub Actions | CI/CD workflow |
+| Git & GitHub | Version control and collaboration |
+
+---
+
+## System Architecture
+
+```text
+User / Admin
+     ↓
+Frontend Templates (HTML + CSS + JavaScript)
+     ↓
+Django Views (Backend Logic)
+     ↓
+Models + SQLite Database
+     ↓
+OpenAI API (GenAI Chatbot)
+```
 
 ---
 
 ## Project Structure
-```
+
+```text
 BookHive/
 │
 ├── BookhiveProject/
-│   ├── settings.py
-│   ├── urls.py
+│   ├── BookhiveProject/
+│   │   ├── settings.py
+│   │   ├── urls.py
+│   │   ├── asgi.py
+│   │   └── wsgi.py
+│   │
+│   ├── myapp/
+│   │   ├── migrations/
+│   │   ├── templates/
+│   │   │   ├── admin/
+│   │   │   │   └── base_site.html
+│   │   │   ├── AdminLogin.html
+│   │   │   ├── UserLogin.html
+│   │   │   ├── UserHome.html
+│   │   │   ├── UserRegistrations.html
+│   │   │   ├── forgotpassword.html
+│   │   │   ├── book_detail.html
+│   │   │   └── base.html
+│   │   │
+│   │   ├── admin.py
+│   │   ├── apps.py
+│   │   ├── models.py
+│   │   ├── tests.py
+│   │   ├── urls.py
+│   │   └── views.py
+│   │
+│   ├── media/
+│   │   ├── book_covers/
+│   │   └── book_pdfs/
+│   │
+│   ├── manage.py
+│   ├── requirements.txt
+│   └── Dockerfile
 │
-├── myapp/
-│   ├── admin.py
-│   ├── views.py
-│   ├── urls.py
-│   ├── templates/
-│       ├── UserLogin.html
-│       ├── UserRegistrations.html
-│       ├── UserHome.html
-│       ├── AdminLogin.html
-│       ├── ForgotPassword.html
-│       ├── book_detail.html
-│       ├── base.html
-│       ├── admin/
-│           ├── base_site.html
-│
-└── manage.py
+└── README.md
 ```
----
-
-## Updated Files in This Version
-
-- myapp/urls.py
-- myapp/views.py
-- myapp/templates/UserLogin.html
-- myapp/templates/ForgotPassword.html
-- myapp/templates/AdminLogin.html
-- myapp/templates/book_detail.html
-- myapp/templates/admin/base_site.html
-- myapp/admin.py
-- BookhiveProject/settings.py
 
 ---
 
-## How to Run
+## Installation and Setup
 
-1. Open terminal and go to project folder
+### Clone the Repository
 
-2. Create virtual environment:
-   python -m venv venv
+```bash
+git clone https://github.com/Savikhya/Book_Hive.git
+cd Book_Hive/BookhiveProject
+```
 
-3. Activate it:
-   Mac/Linux: source venv/bin/activate  
-   Windows: venv\Scripts\activate
+### Install Requirements
 
-4. Install Django:
-   pip install django
+```bash
+pip install -r requirements.txt
+```
 
-5. Apply migrations:
-   python manage.py migrate
+### Create `.env` File
 
-6. Run server:
-   python manage.py runserver
+Create a `.env` file in the same folder as `manage.py`.
 
-7. Open in browser:
-   http://127.0.0.1:8000/
+```text
+OPENAI_API_KEY=your_api_key_here
+```
+
+### Run Migrations
+
+```bash
+python3 manage.py makemigrations
+python3 manage.py migrate
+```
+
+### Create Superuser
+
+```bash
+python3 manage.py createsuperuser
+```
+
+### Run Server
+
+```bash
+python3 manage.py runserver
+```
+
+Open:
+
+```text
+http://127.0.0.1:8000/
+```
+
+Admin:
+
+```text
+http://127.0.0.1:8000/admin/
+```
 
 ---
 
-## Notes
+## GenAI API Integration
 
-- Make sure all migrations are applied before running
-- File names are case-sensitive (e.g., ForgotPassword.html)
-- Admin access requires creating a superuser
+BookHive uses the OpenAI API to provide intelligent book recommendations through the chatbot.
 
-To create superuser:
-python manage.py createsuperuser
+```text
+User Input → Django Backend → OpenAI API → Response → Chatbot UI
+```
+
+The API helps the system understand user interests in natural language and provide more useful book suggestions.
+
+---
+
+## Docker Setup
+
+Build the Docker image:
+
+```bash
+docker build -t bookhive-app .
+```
+
+Run the container:
+
+```bash
+docker run -p 8000:8000 bookhive-app
+```
+
+DockerHub Repository:
+
+```text
+https://hub.docker.com/r/hemanthborra2212/bookhive-app
+```
+
+Pull and run from DockerHub:
+
+```bash
+docker pull hemanthborra2212/bookhive-app
+docker run -p 8000:8000 hemanthborra2212/bookhive-app
+```
 
 ---
 
-## Team
+## CI/CD Pipeline
 
-**Team Name:** BookHive Team
+The project uses GitHub Actions for CI/CD.
 
-- Hemanth Borra  
-- Savikhya Kadiyala  
-- Harsha Reddy Erragunta  
-- Hemesh Phani Sai Bavirisetti  
+The pipeline:
+- Installs dependencies
+- Runs Django tests
+- Verifies that the project works after every push
 
 ---
+
+## Team Contributions
+
+### Hemanth
+- Project setup and integration
+- URL routing
+- Docker setup and DockerHub deployment
+- Chatbot UI integration
+
+### Savikhya
+- Database models
+- Book and genre management
+- Admin panel customization
+
+### Harsha
+- Backend logic
+- Search, filter, sort, and pagination
+- GenAI chatbot backend functionality
+
+### Hemesh
+- UI design
+- Login pages
+- Book detail page
+- View Book and Download Book interface
+
+---
+
+## Conclusion
+
+BookHive is a full-stack digital library management system with user features, admin features, GenAI chatbot integration, Docker deployment, and CI/CD automation.
