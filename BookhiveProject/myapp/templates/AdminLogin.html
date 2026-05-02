@@ -1,147 +1,115 @@
-{% extends 'base.html' %}
-{% block contents %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BookHive | Admin Login</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1f2d3a, #5d4037);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-<style>
-    body {
-        background: linear-gradient(135deg, #1f2937, #111827);
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-    }
+        .admin-card {
+            width: 430px;
+            background: white;
+            padding: 45px;
+            border-radius: 18px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            text-align: center;
+        }
 
-    .admin-container {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-    }
+        .admin-card h1 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
 
-    .admin-card {
-        width: 100%;
-        max-width: 420px;
-        background: white;
-        padding: 35px;
-        border-radius: 16px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-    }
+        .admin-card p {
+            color: #777;
+            margin-bottom: 30px;
+        }
 
-    .admin-title {
-        text-align: center;
-        color: #111827;
-        font-size: 30px;
-        font-weight: bold;
-        margin-bottom: 8px;
-    }
+        label {
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #333;
+        }
 
-    .admin-subtitle {
-        text-align: center;
-        color: #6b7280;
-        font-size: 14px;
-        margin-bottom: 25px;
-    }
+        input {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
 
-    .form-group {
-        margin-bottom: 16px;
-    }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #5d4037;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-    .form-group label {
-        display: block;
-        color: #111827;
-        font-weight: bold;
-        margin-bottom: 6px;
-    }
+        button:hover {
+            background: #3e2723;
+        }
 
-    .form-control {
-        width: 100%;
-        border-radius: 10px;
-        border: 1px solid #d1d5db;
-        padding: 12px;
-        box-sizing: border-box;
-        font-size: 15px;
-    }
+        .links {
+            margin-top: 20px;
+        }
 
-    .form-control:focus {
-        outline: none;
-        border-color: #2563eb;
-    }
+        .links a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-    .btn-admin {
-        width: 100%;
-        background-color: #2563eb;
-        border: none;
-        padding: 12px;
-        color: white;
-        font-size: 16px;
-        border-radius: 10px;
-        margin-top: 6px;
-        cursor: pointer;
-    }
+        .message {
+            color: red;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
 
-    .btn-admin:hover {
-        background-color: #1d4ed8;
-    }
+<div class="admin-card">
+    <h1>BookHive Admin</h1>
+    <p>Manage books, genres, PDFs, and cover images</p>
 
-    .bottom-link {
-        text-align: center;
-        margin-top: 18px;
-    }
+    {% if messages %}
+        {% for message in messages %}
+            <div class="message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 
-    .bottom-link a {
-        text-decoration: none;
-        color: #2563eb;
-        font-weight: 500;
-    }
+    <form method="POST">
+        {% csrf_token %}
 
-    .bottom-link a:hover {
-        text-decoration: underline;
-    }
+        <label>Admin Username</label>
+        <input type="text" name="loginid" placeholder="Enter admin username" required>
 
-    .note-box {
-        background: #f9fafb;
-        border: 1px solid #e5e7eb;
-        color: #374151;
-        border-radius: 10px;
-        padding: 12px;
-        margin-bottom: 18px;
-        font-size: 14px;
-    }
-</style>
+        <label>Password</label>
+        <input type="password" name="pswd" placeholder="Enter password" required>
 
-<div class="admin-container">
-    <div class="admin-card">
-        <h2 class="admin-title">Admin Login</h2>
-        <p class="admin-subtitle">Use your Django admin username and password</p>
+        <button type="submit">Login as Admin</button>
+    </form>
 
-        <div class="note-box">
-            After login, you will be redirected to the Django admin panel.
-        </div>
-
-        <form action="{% url 'AdminLogin' %}" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" class="form-control" name="loginid" required>
-            </div>
-
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" class="form-control" name="pswd" required>
-            </div>
-
-            <button type="submit" class="btn-admin">Login as Admin</button>
-
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{% if message.tags == 'success' %}success{% else %}danger{% endif %} text-center mt-3">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        </form>
-
-        <div class="bottom-link">
-            <a href="{% url 'UserLogin' %}">Back to User Login</a>
-        </div>
+    <div class="links">
+        <a href="{% url 'UserLogin' %}">Back to User Login</a>
     </div>
 </div>
 
-{% endblock %}
+</body>
+</html>
