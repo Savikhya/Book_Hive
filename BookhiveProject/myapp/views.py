@@ -1,4 +1,11 @@
+import os
+from dotenv import load_dotenv
+from openai import OpenAI
 import re
+
+load_dotenv()
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -240,76 +247,212 @@ def book_detail(request, id):
     })
 
 
+from django.http import JsonResponse
+
+from django.http import JsonResponse
+from .models import Book
+
 def chatbot_suggestions(request):
     if 'user_loginid' not in request.session:
         return JsonResponse({
-            'reply': 'Please login first.',
-            'books': [],
-            'redirect_url': ''
+            "reply": "Please login first.",
+            "books": [],
+            "redirect_url": ""
         })
 
-    message = request.GET.get('message', '').strip()
+    user_message = request.GET.get("message", "").strip()
+    message_lower = user_message.lower()
 
-    if not message:
+    if not user_message:
         return JsonResponse({
-            'reply': 'Please enter what you are interested in reading, for example: "I want books about world politics and history" or type "open Hamlet".',
-            'books': [],
-            'redirect_url': ''
+            "reply": "What are you interested in reading?",
+            "books": [],
+            "redirect_url": ""
         })
 
-    cleaned_message = normalize_text(message)
     all_books = Book.objects.prefetch_related('genres').all()
 
-    open_prefixes = ['open ', 'show ', 'go to ', 'take me to ']
-    for prefix in open_prefixes:
-        if cleaned_message.startswith(prefix):
-            book_name = cleaned_message[len(prefix):].strip()
-            matched_book = all_books.filter(title__icontains=book_name).order_by('title').first()
+    # 1. If user asks what genres are available
+    genre_question_words = [
+        "what genres", "which genres", "available genres",
+        "genres do you have", "what generes", "what genre",
+        "list genres", "show genres"
+    ]
 
-            if matched_book:
-                return JsonResponse({
-                    'reply': f'Opening {matched_book.title}.',
-                    'books': [],
-                    'redirect_url': f'/book/{matched_book.id}/'
-                })
-            else:
-                return JsonResponse({
-                    'reply': 'I could not find that book. Try another title.',
-                    'books': [],
-                    'redirect_url': ''
-                })
+    if any(phrase in message_lower for phrase in genre_question_words):
+        genres = Genre.objects.all().order_by("name")
+        genre_names = [genre.name for genre in genres]
 
-    scored_books = []
-    for book in all_books:
-        score, reasons = score_book_against_interest(book, message)
-        if score > 0:
-            scored_books.append((score, book, reasons))
-
-    scored_books.sort(key=lambda x: (-x[0], x[1].title))
-    top_books = scored_books[:5]
-
-    if top_books:
-        books_data = []
-        for score, book, reasons in top_books:
-            books_data.append({
-                'id': book.id,
-                'title': book.title,
-                'author': book.author,
-                'genres': ", ".join([g.name for g in book.genres.all()]),
-                'description': book.description[:140] + "..." if len(book.description) > 140 else book.description,
-                'matched_on': ", ".join(reasons)
+        if genre_names:
+            return JsonResponse({
+                "reply": "We currently have these genres available: " + ", ".join(genre_names) + ".",
+                "books": [],
+                "redirect_url": ""
             })
 
         return JsonResponse({
-            'reply': 'Based on what you are interested in reading, these books may suit you:',
-            'books': books_data,
-            'redirect_url': ''
+            "reply": "No genres are available in the library yet.",
+            "books": [],
+            "redirect_url": ""
         })
 
+    # 2. If user asks what books are available
+    book_question_words = [
+        "what books", "which books", "available books",
+        "books do you have", "list books", "show books"
+    ]
+
+    if any(phrase in message_lower for phrase in book_question_words):
+        books = Book.objects.all().order_by("title")[:10]
+
+        books_data = []
+        for book in books:
+            books_data.append({
+                "id": book.id,
+                "title": book.title,
+                "author": book.author,
+                "genres": ", ".join([g.name for g in book.genres.all()]),
+                "description": book.description[:120] + "..." if len(book.description) > 120 else book.description,
+                "matched_on": "Available in library"
+            })
+
+        return JsonResponse({
+            "reply": "Here are some books currently available in our library:",
+            "books": books_data,
+            "redirect_url": ""
+        })
+
+    # 3. Open by number or book name
+    if "open" in message_lower or "show" in message_lower or "go to" in message_lower:
+        number_match = re.search(r'\b(\d+)(st|nd|rd|th)?\b', message_lower)
+
+        if number_match:
+            number = int(number_match.group(1))
+            last_book_ids = request.session.get("last_chatbot_book_ids", [])
+
+            if 1 <= number <= len(last_book_ids):
+                book_id = last_book_ids[number - 1]
+                book = Book.objects.filter(id=book_id).first()
+
+                if book:
+                    return JsonResponse({
+                        "reply": f"Opening {book.title}.",
+                        "books": [],
+                        "redirect_url": f"/book/{book.id}/"
+                    })
+
+            return JsonResponse({
+                "reply": "I could not find that numbered book from the last suggestions.",
+                "books": [],
+                "redirect_url": ""
+            })
+
+        cleaned_title = message_lower
+        for word in ["open", "show", "go to", "take me to"]:
+            cleaned_title = cleaned_title.replace(word, "")
+
+        cleaned_title = cleaned_title.strip()
+
+        matched_book = Book.objects.filter(title__icontains=cleaned_title).first()
+
+        if matched_book:
+            return JsonResponse({
+                "reply": f"Opening {matched_book.title}.",
+                "books": [],
+                "redirect_url": f"/book/{matched_book.id}/"
+            })
+
+        return JsonResponse({
+            "reply": "I could not find that book title in our library.",
+            "books": [],
+            "redirect_url": ""
+        })
+
+    # 4. Interest-based book recommendation from database
+    keywords = extract_keywords(user_message)
+
+    expanded_keywords = set(keywords)
+    if "history" in keywords or "historic" in keywords or "historical" in keywords:
+        expanded_keywords.update(["history", "historic", "historical", "empire", "colonial", "ancient"])
+
+    matched_books = []
+
+    for book in all_books:
+        score = 0
+
+        title = normalize_text(book.title)
+        author = normalize_text(book.author)
+        description = normalize_text(book.description)
+        genres = normalize_text(" ".join([g.name for g in book.genres.all()]))
+
+        if "history" in expanded_keywords or "historic" in expanded_keywords or "historical" in expanded_keywords:
+            if "history" not in genres and "historic" not in genres and "historical" not in genres:
+                if "history" not in description and "historic" not in description and "historical" not in description:
+                    continue
+
+        for word in expanded_keywords:
+            if word in genres:
+                score += 10
+            if word in description:
+                score += 6
+            if word in title:
+                score += 4
+            if word in author:
+                score += 2
+
+        if score > 0:
+            matched_books.append((score, book))
+
+    matched_books.sort(key=lambda x: (-x[0], x[1].title))
+    top_books = [book for score, book in matched_books[:5]]
+
+    request.session["last_chatbot_book_ids"] = [book.id for book in top_books]
+
+    books_data = []
+    for book in top_books:
+        books_data.append({
+            "id": book.id,
+            "title": book.title,
+            "author": book.author,
+            "genres": ", ".join([g.name for g in book.genres.all()]),
+            "description": book.description[:150] + "..." if len(book.description) > 150 else book.description,
+            "matched_on": "Matched with your reading interest"
+        })
+
+    try:
+        book_context = ""
+        for i, book in enumerate(top_books, start=1):
+            book_context += f"{i}. {book.title} by {book.author}. Genres: {', '.join([g.name for g in book.genres.all()])}. Description: {book.description}\n"
+
+        if top_books:
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are BookHive's assistant. Recommend only from the provided website book list. Do not invent books. Keep the answer polished and short."
+                    },
+                    {
+                        "role": "user",
+                        "content": f"User interest: {user_message}\n\nAvailable matching books:\n{book_context}"
+                    }
+                ],
+                max_tokens=160
+            )
+            reply = response.choices[0].message.content
+        else:
+            reply = "I could not find a matching book in our library."
+
+    except Exception:
+        if top_books:
+            reply = "Here are some books from our library that match your reading interest:"
+        else:
+            reply = "I could not find a matching book in our library."
+
     return JsonResponse({
-        'reply': 'I could not find a strong match in our collection. Try describing your interest in more detail or type "open book title".',
-        'books': [],
-        'redirect_url': ''
+        "reply": reply,
+        "books": books_data,
+        "redirect_url": ""
     })
 
 
