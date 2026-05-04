@@ -1,135 +1,174 @@
-{% extends 'base.html' %}
-{% block contents %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BookHive | Create Account</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #8e735b);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 0;
+        }
 
-<style>
-    body {
-        margin: 0;
-        padding: 0;
-        background: white;
-        font-family: 'Segoe UI', sans-serif;
-    }
+        .register-container {
+            width: 900px;
+            display: flex;
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+        }
 
-    .container {
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 40px 20px;
-    }
+        .left-panel {
+            flex: 1;
+            background: #2c3e50;
+            color: white;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-    .register-card {
-        background: white;
-        padding: 40px;
-        border-radius: 18px;
-        width: 420px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-        border: 1px solid #eeeeee;
-    }
+        .left-panel h1 {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
 
-    .register-card h2 {
-        text-align: center;
-        margin-bottom: 25px;
-        color: #333;
-        font-size: 30px;
-    }
+        .left-panel p {
+            font-size: 17px;
+            line-height: 1.6;
+            color: #e8e8e8;
+        }
 
-    .register-card input,
-    .register-card textarea {
-        width: 100%;
-        padding: 13px 14px;
-        margin-bottom: 14px;
-        border-radius: 10px;
-        border: 1px solid #dcdcdc;
-        font-size: 15px;
-        box-sizing: border-box;
-        outline: none;
-    }
+        .right-panel {
+            flex: 1.2;
+            padding: 40px;
+        }
 
-    .register-card input:focus,
-    .register-card textarea:focus {
-        border-color: #667eea;
-    }
+        .right-panel h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
 
-    .register-card textarea {
-        resize: vertical;
-        min-height: 90px;
-    }
+        label {
+            font-weight: bold;
+            color: #333;
+        }
 
-    .btn {
-        width: 100%;
-        padding: 13px;
-        border: none;
-        border-radius: 10px;
-        background: #667eea;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        margin-top: 5px;
-    }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 6px 0 14px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-sizing: border-box;
+        }
 
-    .btn:hover {
-        background: #5a67d8;
-    }
+        textarea {
+            resize: vertical;
+            height: 70px;
+        }
 
-    .links {
-        margin-top: 18px;
-        text-align: center;
-    }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
-    .links a {
-        text-decoration: none;
-        color: #667eea;
-        font-size: 14px;
-        font-weight: 500;
-    }
+        button:hover {
+            background: #1f2d3a;
+        }
 
-    .links a:hover {
-        text-decoration: underline;
-    }
+        .links {
+            margin-top: 18px;
+            text-align: center;
+        }
 
-    .message {
-        margin-top: 15px;
-        text-align: center;
-    }
+        .links a {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-    .message p {
-        margin: 6px 0;
-        color: #d11a2a;
-    }
-</style>
+        .links a:hover {
+            text-decoration: underline;
+        }
 
-<div class="container">
-    <div class="register-card">
+        .message {
+            color: red;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="register-container">
+    <div class="left-panel">
+        <h1>Join BookHive</h1>
+        <p>
+            Create your account and start exploring books, viewing details, and downloading available books.
+        </p>
+    </div>
+
+    <div class="right-panel">
         <h2>Create Account</h2>
 
-        <form action="{% url 'UserRegister' %}" method="post">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
             {% csrf_token %}
 
-            <input type="text" name="name" placeholder="Full Name" required>
-            <input type="text" name="loginid" placeholder="Login ID" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <input type="text" name="mobile" placeholder="Mobile Number" required>
-            <input type="email" name="email" placeholder="Email Address" required>
-            <input type="text" name="locality" placeholder="Locality">
-            <textarea name="address" placeholder="Address"></textarea>
-            <input type="text" name="city" placeholder="City">
-            <input type="text" name="state" placeholder="State">
+            <label>Name</label>
+            <input type="text" name="name" placeholder="Enter your full name" required>
 
-            <button type="submit" class="btn">Create Account</button>
+            <label>Login ID</label>
+            <input type="text" name="loginid" placeholder="Choose a login ID" required>
+
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Create password" required>
+
+            <label>Mobile</label>
+            <input type="text" name="mobile" placeholder="Enter mobile number" required>
+
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter email address" required>
+
+            <label>Locality</label>
+            <input type="text" name="locality" placeholder="Enter locality">
+
+            <label>Address</label>
+            <textarea name="address" placeholder="Enter address"></textarea>
+
+            <label>City</label>
+            <input type="text" name="city" placeholder="Enter city">
+
+            <label>State</label>
+            <input type="text" name="state" placeholder="Enter state">
+
+            <button type="submit">Create Account</button>
         </form>
 
         <div class="links">
-            <a href="{% url 'UserLogin' %}">Already have an account? Login</a>
-        </div>
-
-        <div class="message">
-            {% if messages %}
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-            {% endif %}
+            <p>Already have an account? <a href="{% url 'UserLogin' %}">Login Here</a></p>
         </div>
     </div>
 </div>
 
-{% endblock %}
+</body>
+</html>

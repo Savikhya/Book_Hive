@@ -26,7 +26,7 @@ class Genre(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=200)
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
+    genres = models.ManyToManyField(Genre, related_name='books')
     description = models.TextField()
     book_pdf = models.FileField(upload_to='book_pdfs/', blank=True, null=True)
     cover_image = models.ImageField(upload_to='book_covers/', blank=True, null=True)
